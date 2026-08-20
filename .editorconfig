@@ -6,10 +6,20 @@ insert_final_newline = true
 charset = utf-8
 trim_trailing_whitespace = true
 
-[*.{py,md,ini}]
+[*.md]
+indent_style = space
+
+[*.{py,ini}]
 indent_style = space
 indent_size = 4
 
-[*.{json,yaml,yml,cff}]
+[*.{json,yaml,yml,cff,toml}]
 indent_style = space
 indent_size = 2
+
+[tests/**/*.json]
+indent_size = unset
+indent_style = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
+end_of_line = unset

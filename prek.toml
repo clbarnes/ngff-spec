@@ -1,0 +1,15 @@
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace" },
+  # { id = "end-of-file-fixer" },
+  { id = "check-yaml" },
+  { id = "check-json" },
+  # { id = "pretty-format-json" },
+  { id = "mixed-line-ending", fix = "lf" },
+]
+
+[[repos]]
+repo = "https://github.com/editorconfig-checker/editorconfig-checker.python"
+rev = "3.11.1"
+hooks = [{ id = "editorconfig-checker" }]
