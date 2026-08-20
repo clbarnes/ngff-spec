@@ -9,11 +9,19 @@ build:
 # Check spelling in the source files;
 # configured in pyproject.toml.
 spell:
-    uv run --extra testing codespell
+    uv run codespell
 
 # Run all lint commands.
-lint: spell
+lint: spell pre-commit
 
 # Run schema tests.
 test:
-    uv run --extra testing pytest -v
+    uv run pytest -v
+
+# Install pre-commit hooks to lint changed files.
+pre-commit-install:
+    uv run prek install
+
+# Run pre-commit lints on all files.
+pre-commit:
+    uv run prek run --all-files
