@@ -214,7 +214,7 @@
           "items": {
             "type": "number"
           }
-        }        
+        }
       },
       "required": [
         "translation"

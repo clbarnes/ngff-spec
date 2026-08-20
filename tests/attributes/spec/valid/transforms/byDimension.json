@@ -72,7 +72,7 @@
                 },
                 "outputAxes": [1],
                 "inputAxes": [1]
-                
+
               }
             ],
             "name": "transform-name"

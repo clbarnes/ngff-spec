@@ -429,7 +429,7 @@ The following transformations are supported:
 | [`bijection`](#bijection-md) | `"forward":Transformation`<br>`"inverse":Transformation` | An invertible transformation providing an explicit forward transformation and its inverse. |
 | [`byDimension`](#bydimension-md) | `"transformations":List[Transformation]`.<br>Transformations in the array MUST have<br>`"inputAxes": List[number]`, <br> and `"outputAxes": List[number]` | A high dimensional transformation using lower dimensional transformations on subsets of dimensions. |
 
-The parameter values (e.g., `scale` for a [scale transformation](#scale-md)) MUST be compatible with input and output space dimensionality (see details). 
+The parameter values (e.g., `scale` for a [scale transformation](#scale-md)) MUST be compatible with input and output space dimensionality (see details).
 
 The `input` and `output` fields are objects structured as follows:
 
@@ -471,7 +471,7 @@ Depending on which, different constraints apply to the transformations, as descr
   - Both `input` and `output` MUST specify a coordinate system `name`.
   - `path` is required when referencing a coordinate system in a multiscale image subgroup;
     it MAY be omitted or null when referencing a coordinate system defined in the scene's own `coordinateSystems`.
-  
+
 
 In any context, the values given for `name` and `path` provide an unambiguous reference to a named coordinate system.
 If the `path` field is null or omitted, this is to be interpreted as referring to a named coordinate system in the same `zarr.json` file.
@@ -1107,7 +1107,7 @@ An exact reproducibility of pixel values for images transformed and resampled by
 
 The multiscale group at `path` MUST satisfy:
   - **Dimensionality**: If the input coordinate system has `N` axes, the multiscale image at location `path` MUST have `N+1` dimensions.
-  - **Vector dimension length**: 
+  - **Vector dimension length**:
     - For `coordinates` transformations, the length of the array along the `coordinate` dimension (last axis) MUST equal `M`,
       the number of axes in the output coordinate system.
     - For `displacements` transformations, the length of the array along the `displacement` dimension (last axis) MUST equal `N`,
@@ -1870,7 +1870,7 @@ If they do so, it is RECOMMENDED that the scene's first entry under the `coordin
 If no coordinate system is defined therein, but only in the respective linked multiscale groups,
 viewers may want to expose a choice for the user to select a coordinate system for display when opening the dataset for the first time.
 
- 
+
 
 ```
 
