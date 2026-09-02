@@ -2085,6 +2085,16 @@ The first field is part of the first acquisition, and the second field is part o
 For images that share a spatial relationship,
 the `scene` metadata layout can be used to describe the relationship between images.
 
+:::{table} Object: Scene
+(object-scene)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `coordinateTransformations` | MUST | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations between coordinate systems. |
+| `coordinateSystems` | MAY | array of [CoordinateSystem](#object-coordinatesystem) | Coordinate systems applicable to multiple images. |
+
+:::
+
 The `scene` object MUST contain the field `coordinateTransformations`,
 whose value MUST be an array of valid [transformations](#trafo-types-md).
 It MAY contain the field `coordinateSystems`,
