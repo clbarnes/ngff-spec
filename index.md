@@ -478,12 +478,18 @@ This means they represent functions from *points* in the input space to *points*
 
 A transform is a JSON object with the following fields:
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| [`type`](#transform-type-md) | string | yes | The type of the transformation, which determines the required and optional fields for that transformation. |
-| `name` | string | no | A unique name for this transformation. |
-| [`input`](#input-output-md) | object | yes, unless part of a wrapper transform ([`sequence`](#sequence-md), [`bijection`](#bijection-md), [`byDimension`](#bydimension-md)) | The input coordinate system for this transformation. |
-| [`output`](#input-output-md) | object | yes, unless part of a wrapper transform ([`sequence`](#sequence-md), [`bijection`](#bijection-md), [`byDimension`](#bydimension-md)) | The output coordinate system for this transformation. |
+:::{table} Object: CoordinateTransformation
+(object-coordinatetransformation)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MAY | string | A unique name for this transformation. |
+| `input` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object-coordinatesystemreference) object | The input coordinate system for this transformation. |
+| `output` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object-coordinatesystemreference) object | The output coordinate system for this transformation. |
+| `type` | MUST | string | Discriminator for CoordinateTransformation variants. |
+| ... | MAY | any | Additional fields are strictly determined by the `type` discriminator. |
+
+:::
 
 The following transformations are supported:
 
@@ -507,11 +513,15 @@ The parameter values (e.g., `scale` for a [scale transformation](#scale-md)) MUS
 
 The `input` and `output` fields are objects structured as follows:
 
-(input-output-md)=
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | string | no | The name of the coordinate system. Required context-dependent ([see details](#coord-trafo-constraints)). |
-| `path` | string | no | The path to a zarr group, if the coordinate system is defined in a different Zarr group. Required context-dependent ([see details](#coord-trafo-constraints)). |
+:::{table} Object: CoordinateSystemReference
+(object-coordinatesystemreference)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MAY | string | The name of the coordinate system. Required context-dependent ([see details](#coord-trafo-constraints)). |
+| `path` | MAY | string | The path to a zarr group, if the coordinate system is defined in a different Zarr group. Required context-dependent ([see details](#coord-trafo-constraints)). |
+
+:::
 
 Implementations SHOULD prefer to store transformations as a sequence of less expressive transformations where possible
 (e.g., sequence[translation, rotation], instead of affine transformation with translation/rotation).
@@ -765,6 +775,15 @@ otherwise it is given by the length of `axes` for the coordinate system with the
 ##### identity
 (identity-md)=
 
+:::{table} CoordinateTransformation variant: Identity
+(object-coordinatetransformation-identity)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"identity"` | Discriminator for the Identity variant. |
+
+:::
+
 `identity` transformations map input coordinates to output coordinates without modification.
 The position of the i-th axis of the output coordinate system
 is set to the position of the ith axis of the input coordinate system.
@@ -787,6 +806,16 @@ y = j
 
 ##### mapAxis
 (mapAxis-md)=
+
+:::{table} CoordinateTransformation variant: MapAxis
+(object-coordinatetransformation-mapaxis)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"mapAxis"` | Discriminator for the MapAxis variant. |
+| `mapAxis` | MUST | array of unsigned integer | New axis order, as indices into the old axis order. |
+
+:::
 
 `mapAxis` transformations describe axis permutations as a transpose vector of integers.
 Transformations MUST include a `mapAxis` field
@@ -826,6 +855,17 @@ y = i
 
 ##### projectAxis
 (projectAxis-md)=
+
+:::{table} CoordinateTransformation variant: ProjectAxis
+(object-coordinatetransformation-projectaxis)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"projectAxis"` | Discriminator for the ProjectAxis variant. |
+| `droppedInputs` | MAY | array of unsigned integer | Which indices of the _input_ axes are to be dropped. |
+| `createdOutputs` | MAY | array of unsigned integer | Which indices of the _output_ axes are newly created. |
+
+:::
 
 `projectAxis` transformations project input coordinates from `N` dimensions to `M` dimensions
 by adding or dropping dimensions at specified indices of the coordinate vector.
@@ -886,6 +926,16 @@ This is useful for example when projecting a 3D CYX image to a 2D YX image by dr
 ##### translation
 (translation-md)=
 
+:::{table} CoordinateTransformation variant: Translation
+(object-coordinatetransformation-translation)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"translation"` | Discriminator for the Translation variant. |
+| `translation` | MUST | array of number | Values to add to the input coordinate. |
+
+:::
+
 `translation` transformations are special cases of affine transformations.
 When possible, a translation transformation should be preferred to its equivalent affine.
 Input and output dimensionality MUST be identical
@@ -912,6 +962,16 @@ y = j - 1.42
 
 ##### scale
 (scale-md)=
+
+:::{table} CoordinateTransformation variant: Scale
+(object-coordinatetransformation-scale)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"scale"` | Discriminator for the Scale variant. |
+| `scale` | MUST | array of number | Values to multiply the input coordinate by. |
+
+:::
 
 `scale` transformations are special cases of affine transformations.
 When possible, a scale transformation SHOULD be preferred to its equivalent affine.
@@ -952,6 +1012,17 @@ these axes are typically not transformed, but must be represented in the scale p
 
 ##### affine
 (affine-md)=
+
+:::{table} CoordinateTransformation variant: Affine
+(object-coordinatetransformation-affine)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"affine"` | Discriminator for the Affine variant. |
+| `affine` | MUST if `path` is omitted | array of array of number | Rows of the upper part of an affine matrix. |
+| `path` | MUST if `affine` is omitted | string | Path to a Zarr array containing the upper part of an affine matrix. |
+
+:::
 
 `affine`s are [matrix transformations](#matrix-trafo-md) from N-dimensional inputs to M-dimensional outputs.
 They are represented as the upper `(M)x(N+1)` sub-matrix of a `(M+1)x(N+1)` matrix in [homogeneous
@@ -1041,6 +1112,17 @@ these axes are typically not transformed, but must be represented in the transfo
 ##### rotation
 (rotation-md)=
 
+:::{table} CoordinateTransformation variant: Rotation
+(object-coordinatetransformation-rotation)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"affine"` | Discriminator for the Affine variant. |
+| `rotation` | MUST if `path` is omitted | array of array of number | Rows of a rotation matrix. |
+| `path` | MUST if `rotation` is omitted | string | Path to a Zarr array containing a rotation matrix matrix. |
+
+:::
+
 `rotation`s are [matrix transformations](#matrix-trafo-md) that are special cases of affine transformations.
 When possible, a rotation transformation SHOULD be used instead of an equivalent affine.
 Input and output dimensionality (N) MUST be identical.
@@ -1075,6 +1157,16 @@ y = 1*i + 0*j
 
 ##### sequence
 (sequence-md)=
+
+:::{table} CoordinateTransformation variant: Sequence
+(object-coordinatetransformation-sequence)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"sequence"` | Discriminator for the Sequence variant. |
+| `transformations` | MUST | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations to apply in sequence; SHOULD omit `input`/`output` |
+
+:::
 
 A `sequence` transformation consists of an ordered array of coordinate transformations,
 and is invertible if every coordinate transform in the array is invertible
@@ -1132,6 +1224,28 @@ or displacements (relative shifts) for each point in the input space.
 The `coordinates` and `displacements` transformations are not invertible in general,
 but implementations MAY approximate their inverses.
 ```
+
+:::{table} CoordinateTransformation variant: Coordinates
+(object-coordinatetransformation-coordinates)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"coordinates"` | Discriminator for the Coordinates variant. |
+| `path` | MUST | string | Path to the coordinate Zarr array. |
+| `interpolation` | MAY | string | Type of interpolation used between coordinate values. |
+
+:::
+
+:::{table} CoordinateTransformation variant: Displacements
+(object-coordinatetransformation-displacements)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"displacements"` | Discriminator for the Displacements variant. |
+| `path` | MUST | string | Path to the displacement Zarr array. |
+| `interpolation` | MAY | string | Type of interpolation used between displacement values. |
+
+:::
 
 **Array Structure**
 
@@ -1250,6 +1364,27 @@ Otherwise, the vector field is interpolated to obtain a displacement value for t
 ##### byDimension
 (byDimension-md)=
 
+:::{table} CoordinateTransformation variant: ByDimension
+(object-coordinatetransformation-bydimension)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"byDimension"` | Discriminator for the ByDimension variant. |
+| `transformations` | MUST | array of [SubTransformation](#object-subtransformation) | Transformations to apply to subsets of coordinate axes. |
+
+:::
+
+:::{table} Object: SubTransformation
+(object-subtransformation)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `inputAxes` | MUST | array of unsigned integer | Which axes of the input coordinate this subtransformation applies to. |
+| `outputAxes` | MUST | array of unsigned integer | Which axes of the output coordinate this subtransformation produces. |
+| `transformation` | MUST | [CoordinateTransformation](#object-coordinate-transformation) object | Transformation to apply; SHOULD omit `input`/`output`. |
+
+:::
+
 `byDimension` transformations build a high dimensional transformation
 using lower dimensional transformations on subsets of dimensions.
 
@@ -1309,6 +1444,17 @@ This transformation is invalid because the output axis `[1]` appears in more tha
 
 ##### bijection
 (bijection-md)=
+
+:::{table} CoordinateTransformation variant: Bijection
+(object-coordinatetransformation-bijection)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"bijection"` | Discriminator for the Bijection variant. |
+| `forward` | MUST | [CoordinateTransformation](#object-coordinatetransformation) object | Transformation to apply in the forward direction; SHOULD omit `input`/`output`. |
+| `inverse` | MUST | [CoordinateTransformation](#object-coordinatetransformation) object | Transformation to apply in the inverse direction; SHOULD omit `input`/`output`. |
+
+:::
 
 A bijection transformation is an invertible transformation in
 which both the `forward` and `inverse` transformations are explicitly defined.
