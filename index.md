@@ -1888,8 +1888,36 @@ Pixels with a 1 in the Zarr array, which correspond to cellular space, will be d
 ### "plate" metadata
 (plate-md)=
 
+:::{table} Object: Plate
+(object-plate)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `acquisitions` | MAY | array of [Acquisition](#object-acquisition) | Acquisitions for a given plate to which wells can refer. |
+| `columns` | MUST | array of [Column](#object-column) | Details about the plate columns. |
+| `rows` | MUST | array of [Row](#object-row) | Details about the plate rows. |
+| `field_count` | SHOULD | unsigned integer | Maximum fields of view across all wells. |
+| `name` | SHOULD | string | Name of the plate. |
+| `wells` | MUST | array of [PlateWell](#object-platewell) | Details about the plate wells. |
+
+:::
+
 For high-content screening datasets,
 the plate layout can be found under the custom attributes of the plate group under the `plate` key in the group-level metadata.
+
+:::{table} Object: Acquisition
+(object-acquisition)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `id` | MUST | unsigned integer | Unique within the plate, to which wells can refer. |
+| `name` | SHOULD | string | Name of the acquisition. |
+| `maximumfieldcount` | SHOULD | unsigned integer | Maximum number of fields of view for the acquisition. |
+| `description` | MAY | string | Free-text details about the acquisition. |
+| `starttime` | MAY | integer | Epoch timestamp specifying the start of the acquisition. |
+| `endtime` | MAY | integer | Epoch timestamp specifying the end of the acquisition. |
+
+:::
 
 The `plate` object MAY contain an `acquisitions` key
 whose value MUST be an array of JSON objects defining the acquisitions for a given plate to which wells can refer to.
@@ -1904,6 +1932,15 @@ Each acquisition object MAY contain a `description` key
 whose value MUST be a string specifying a description for the acquisition.
 Each acquisition object MAY contain a `starttime` and/or `endtime` key
 whose values MUST be integer epoch timestamps specifying the start and/or end timestamp of the acquisition.
+
+:::{table} Object: Column
+(object-column)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MUST | string | Column name. |
+
+:::
 
 The `plate` object MUST contain a `columns` key
 whose value MUST be an array of JSON objects defining the columns of the plate.
@@ -1923,6 +1960,15 @@ whose value MUST be a positive integer defining the maximum number of fields per
 The `plate` object SHOULD contain a `name` key
 whose value MUST be a string defining the name of the plate.
 
+ :::{table} Object: Row
+ (object-row)=
+
+ | key | requirement | type | description |
+ | --- | ----------- | ---- | ----------- |
+ | `name` | MUST | string | Row name. |
+
+ :::
+
 The `plate` object MUST contain a `rows` key
 whose value MUST be an array of JSON objects defining the rows of the plate.
 Each row object defines the properties of the row at the index of the object in the array.
@@ -1934,6 +1980,17 @@ MUST be case-sensitive,
 and MUST NOT be a duplicate of any other `name` in the `rows` array.
 Care SHOULD be taken to avoid collisions on case-insensitive filesystems
 (e.g. avoid using both `Aa` and `aA`).
+
+:::{table} Object: PlateWell
+(object-platewell)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `path` | MUST | string | Path to the Zarr group of the well as `"rowName/columnName"`. |
+| `rowIndex` | MUST | unsigned integer | Index into the plate's `rows` array. |
+| `columnIndex` | MUST | unsigned integer | Index into the plate's `columns` array. |
+
+:::
 
 The `plate` object MUST contain a `wells` key
 whose value MUST be a list of JSON objects defining the wells of the plate.
