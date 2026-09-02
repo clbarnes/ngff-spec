@@ -1755,12 +1755,34 @@ All label images SHOULD be listed within this metadata file.
 The `zarr.json` file for the label image MUST implement the multiscales specification.
 Within the `multiscales` object, the JSON array associated with the `datasets` key MUST have the same number of entries (scale levels) as the original unlabeled image.
 
+:::{table} Object: ImageLabel
+(object-imagelabel)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `colors` | SHOULD | array of [LabelColor](#object-labelcolor) | Color information associated with each label value. |
+| `properties` | MAY | array of [LabelProperties](#object-labelproperties) | Arbitrary properties associated with each label value. |
+| `source` | MAY | [Source](#object-source) | Information about the "raw" image labelled by this label image. |
+
+:::
+
 In addition to the `multiscales` key, the OME-Zarr Metadata in this image-level `zarr.json` file SHOULD contain another key, `image-label`,
 whose value is also a JSON object.
 The `image-label` object stores information about the display colors, source image,
 and optionally, further arbitrary properties of the label image.
 That `image-label` object SHOULD contain a `colors` key,
 whose value MUST be a JSON array describing color information for the unique label values.
+
+:::{table} Object: LabelColor
+(object-labelcolor)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `label-value` | MUST | integer | Value of the label. |
+| `rgba` | MAY | array of 4 integers in `[0,256)` | Red, green, blue, alpha (opacity) values as unsigned 8-bit integers. |
+| ... | MAY | any | Additional keys are allowed. |
+
+:::
 
 Conforming readers SHOULD display labels using the colors specified by the `colors` JSON array, as follows.
 This array contains one JSON object for each unique custom label.
@@ -1773,12 +1795,31 @@ Additional keys under `colors` are allowed.
 
 Next, the `image-label` object MAY contain the following keys: a `properties` key, and a `source` key.
 
+:::{table} Object: LabelProperties
+(object-labelproperties)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `label-value` | MUST | integer | Value of the label. |
+| ... | MAY | any | Additional keys are allowed. |
+
+:::
+
 Like the `colors` key, the value of the `properties` key MUST be an array of JSON objects describing the set of unique possible pixel values.
 Each object in the `properties` array MUST contain the `label-value` key,
 whose value again MUST be an integer specifying the pixel value for that label.
 Additionally, an arbitrary number of key-value pairs MAY be present for each label value,
 denoting arbitrary metadata associated with that label.
 Label-value objects within the `properties` array do not need to have the same keys.
+
+:::{table} Object: Source
+(object-source)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `image` | MAY | string, default `"../.."` | Path to the OME-Zarr node containing the "raw" multiscale image. |
+
+:::
 
 The value of the `source` key MUST be a JSON object containing information about the original image from which the label image derives.
 This object MAY include a key `image`, whose value MUST be a string specifying the relative path to a Zarr image group.
