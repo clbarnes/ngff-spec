@@ -198,6 +198,16 @@ object that MUST contain a `version` key, the value of which MUST be a string sp
 ### "coordinateSystems" metadata
 (coordinate-systems-md)=
 
+:::{table} Object: CoordinateSystem
+(object-coordinatesystem)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MUST | string, non-empty | Used to identify the coordinate system. |
+| `axes` | MUST | array of [Axis](#object-axis) | Information about each array dimension. |
+
+:::
+
 A coordinate system is a JSON object with a `name` field and an `axes` field.
 Every coordinate system:
 - MUST contain the field `name`.
