@@ -1502,14 +1502,29 @@ resolutions.
 `multiscales` contains an array of objects where each entry describes a multiscale image.
 Each object provides the following fields:
 
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `coordinateSystems` | JSON array of objects | yes | [Coordinate system metadata](#coordinate-systems-md) for the multiscale image. |
-| `datasets` | JSON array of objects | yes | Metadata about arrays storing the individual resolution levels. |
-| `coordinateTransformations` | JSON array of objects | no | Metadata about transformations that are applied to all resolution levels in the same manner. |
-| `name` | string | no | Name of the multiscale image. |
-| `type` | string | no | Downsampling method used to generate the multiscale image. |
-| `metadata` | JSON object | no | Additional metadata about the downscaling method. |
+:::{table} Object: Multiscale
+(object-multiscale)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `coordinateSystems` | MUST | array of [CoordinateSystem](#object-coordinatesystem) | Coordinate systems for this multiscale. |
+| `datasets` | MUST | array of [Dataset](#object-dataset) | Metadata about arrays storing individual resolution levels. |
+| `coordinateTransformations` | MAY | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations applied to all resolution levels. |
+| `name` | MAY | string | Name of the multiscale image. |
+| `type` | MAY | string | Name of the downsampling method used to generate lower scales. |
+| `metadata` | MAY | object | Additional metadata about the downscaling method. |
+
+:::
+
+:::{table} Object: Dataset
+(object-dataset)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `path` | MUST | string | Path to the Zarr array containing image data for this scale level. |
+| `coordinateTransformations` | MUST | [CoordinateTransformation](#object-coordinatetransformation) | Transformation from the image voxel indices to a known coordinate system. |
+
+:::
 
 **`coordinateSystems`**
 : The `coordinateSystems` field is a JSON array containing [coordinate system metadata](#coordinate-systems-md)
