@@ -2030,6 +2030,25 @@ containing one field of view per acquisition.
 For high-content screening datasets,
 the metadata about all fields of views under a given well can be found under the `well` key in the attributes of the well group.
 
+:::{table} Object: Well
+(object-well)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `images` | MUST | array of [FieldOfView](#object-fieldofview) | Fields of view of the well. |
+
+:::
+
+:::{table} Object: FieldOfView
+(object-fieldofview)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `path` | MUST | string | Path to the Zarr group of the field of view. |
+| `acquisition` | MUST if more than one acquisition is defined by the plate | unsigned integer | ID of an acquisition defined in the plate. |
+
+:::
+
 The `well` object MUST contain an `images` key
 whose value MUST be an array of JSON objects specifying all fields of views for a given well.
 Each image object MUST contain a `path` key
