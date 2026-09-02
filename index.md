@@ -248,6 +248,20 @@ See the [example below](#spec:example:coordinate_transformation_scale).
 #### "axes" metadata
 (axes-md)=
 
+:::{table} Object: Axis
+(object-axis)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MUST | string, non-empty | Used to identify the axis. |
+| `type` | MUST | string | See below for axis types. |
+| `discrete` | MAY | boolean, default `false` | Whether this axis should not be interpolated. |
+| `unit` | SHOULD | string | See below for unit types. |
+| `longName` | MAY | string | Description of an axis and its properties. |
+| `orientation` | MAY | [Orientation](#object-orientation-anatomical) object | Used when an axis aligns with a canonical orientation of the sample. |
+
+:::
+
 `axes` describes the dimensions of a coordinate systems
 and adds an interpretation to the samples along that dimension.
 
@@ -281,42 +295,53 @@ The length of "axes" MUST be equal to the number of dimensions of the arrays tha
 ```{note}
 (spec:orientation-values)=
 
+:::{table} Orientation variant: Anatomical
+(object-orientation-anatomical)=
+
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `type` | MUST | `"anatomical"` | Discriminator for the Anatomical variant. |
+| `orientation` | MUST | [Anatomical Orientation](#enum-anatomical-orientation) enum | Known orientation type. |
+
+:::
+
 When a spatial axis is aligned with a specific orientation, this can be
 indicated with the "orientation" field, which must have "type"
 "anatomical" (with further types to be added to the specification or as
 extensions in the future), and one of the values detailed below:
 
-**Common to both bipeds and quadrupeds:**
-- `left-to-right`
-- `right-to-left`
-- `proximal-to-distal`
-- `distal-to-proximal`
+:::{table} Enum: Anatomical Orientation
+(enum-anatomical-orientation)=
 
-**Primarily for bipeds (humans):**
-- `anterior-to-posterior` (front-to-back)
-- `posterior-to-anterior` (back-to-front)
-- `inferior-to-superior` (feet-to-head)
-- `superior-to-inferior` (head-to-feet)
-- `dorsal-to-palmar` (back of hand to palm)
-- `palmar-to-dorsal` (palm to back of hand)
-- `dorsal-to-plantar` (top of foot to sole)
-- `plantar-to-dorsal` (sole to top of foot)
+| value | description |
+| ----- | ----------- |
+| `"left-to-right"` | Common for bipeds and quadrupeds. |
+| `"right-to-left"` | Common for bipeds and quadrupeds. |
+| `"proximal-to-distal"` | Common for bipeds and quadrupeds. |
+| `"distal-to-proximal"` | Common for bipeds and quadrupeds. |
+| `"anterior-to-posterior"` | Primarily for bipeds (humans); front-to-back. |
+| `"posterior-to-anterior"` | Primarily for bipeds (humans); back-to-front. |
+| `"inferior-to-superior"` | Primarily for bipeds (humans); feet-to-head. |
+| `"superior-to-inferior"` | Primarily for bipeds (humans); head-to-feet. |
+| `"dorsal-to-palmar"` | Primarily for bipeds (humans); back of hand to palm. |
+| `"palmar-to-dorsal"` | Primarily for bipeds (humans); palm to back of hand. |
+| `"dorsal-to-plantar"` | Primarily for bipeds (humans); top of foot to sole. |
+| `"plantar-to-dorsal"` | Primarily for bipeds (humans); sole to top of foot. |
+| `"rostral-to-caudal"` | Primarily for quadrupeds; nose/beak-to-tail, especially for nervous system. |
+| `"caudal-to-rostral"` | Primarily for quadrupeds; tail-to-nose/beak, especially for nervous system. |
+| `"cranial-to-caudal"` | Primarily for quadrupeds; head-to-tail. |
+| `"caudal-to-cranial"` | Primarily for quadrupeds; tail-to-head. |
+| `"dorsal-to-ventral"` | Primarily for quadrupeds; back/top-to-belly/bottom. |
+| `"ventral-to-dorsal"` | Primarily for quadrupeds; belly/bottom-to-back/top. |
+| `"superficial-to-deep"` | For layered and polarized tissues (subject-local); outer surface to inner depth, e.g. skin, gut, cortex. |
+| `"deep-to-superficial"` | For layered and polarized tissues (subject-local); inner depth to outer surface. |
+| `"apical-to-basal"` | For layered and polarized tissues (subject-local); apical to basal surface, e.g. epithelial layers, polarized cells. |
+| `"basal-to-apical"` | For layered and polarized tissues (subject-local); basal to apical surface. |
+| `"apex-to-base"` | For layered and polarized tissues (subject-local); tip to broad base, e.g. heart, lungs. |
+| `"base-to-apex"` | For layered and polarized tissues (subject-local); broad base to tip. |
 
-**Primarily for quadrupeds:**
-- `rostral-to-caudal` (nose/beak-to-tail, especially for nervous system)
-- `caudal-to-rostral` (tail-to-nose/beak, especially for nervous system)
-- `cranial-to-caudal` (head-to-tail)
-- `caudal-to-cranial` (tail-to-head)
-- `dorsal-to-ventral` (back/top-to-belly/bottom)
-- `ventral-to-dorsal` (belly/bottom-to-back/top)
+:::
 
-**For layered and polarized tissues (subject-local):**
-- `superficial-to-deep` (outer surface to inner depth, e.g. skin, gut, cortex)
-- `deep-to-superficial` (inner depth to outer surface)
-- `apical-to-basal` (apical to basal surface, e.g. epithelial layers, polarized cells)
-- `basal-to-apical` (basal to apical surface)
-- `apex-to-base` (tip to broad base, e.g. heart, lungs)
-- `base-to-apex` (broad base to tip)
 ```
 
 Arrays are inherently discrete (see Array coordinate systems, below)
