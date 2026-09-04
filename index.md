@@ -137,8 +137,8 @@ A well group SHOULD NOT be present if there are no images in the well.
     └── ...                   # Other rows
 ```
 
-### Scene
 (scene-format)=
+### Scene
 
 The following specification describes the hierarchy of Zarr groups for a scene dataset.
 The group above the images defines a scene, which is a collection of images that share a spatial relationship with each other (see [coordinate transformations metadata](#coord-trafo-md)).
@@ -172,8 +172,8 @@ store.zarr                      # One scene dataset
     └── labels                  # Labels (optional)
 </pre>
 
-## OME-Zarr Metadata
 (metadata)=
+## OME-Zarr Metadata
 
 The "OME-Zarr Metadata" contains metadata keys as specified below for discovering certain types of data, especially images.
 
@@ -195,11 +195,11 @@ object that MUST contain a `version` key, the value of which MUST be a string sp
 }
 ```
 
-### "coordinateSystems" metadata
 (coordinate-systems-md)=
+### "coordinateSystems" metadata
 
 :::{table} Object: CoordinateSystem
-:label: object:coordinatesystem
+:name: object:coordinatesystem
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -245,11 +245,11 @@ SHOULD ensure that they are in the same coordinate system (same name and locatio
 or can be transformed to the same coordinate system before doing analysis.
 See the [example below](#spec:example:coordinate_transformation_scale).
 
-#### "axes" metadata
 (axes-md)=
+#### "axes" metadata
 
 :::{table} Object: Axis
-:label: object:axis
+:name: object:axis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -293,10 +293,10 @@ The values in the `name` fields MUST be unique within the same coordinate system
 The length of "axes" MUST be equal to the number of dimensions of the arrays that contain the image data.
 
 ```{note}
-(spec:orientation-values)=
+:name: spec:orientation-values
 
 :::{table} Orientation variant: Anatomical
-:label: object:orientation:anatomical
+:name: object:orientation:anatomical
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -311,7 +311,7 @@ indicated with the "orientation" field, which must have "type"
 extensions in the future), and one of the values detailed below:
 
 :::{table} Enum: AnatomicalOrientation
-(enum:anatomicalorientation)=
+:name: enum:anatomicalorientation
 
 | value | description |
 | ----- | ----------- |
@@ -386,9 +386,9 @@ The following conventions apply in this specification:
 For a more formal and in-depth definition,
 see chapter 4 and figure 4.1 of the [ITK Software Guide](https://itk.org/ItkSoftwareGuide.pdf).
 
+(bf2raw)=
 ### "bioformats2raw.layout" metadata (transitional)
 
-(bf2raw)=
 
 [=Transitional=] `bioformats2raw.layout` metadata identifies a group which implicitly describes a series of images.
 The need for the collection stems from the common "multi-image file" scenario in microscopy.
@@ -398,9 +398,9 @@ In order to capture that information within an OME-Zarr dataset, `bioformats2raw
 The bioformats2raw layout has been added to v0.4 as a transitional specification to specify filesets that already exist in the wild.
 An upcoming NGFF specification will replace this layout with explicit metadata.
 
+(bf2raw-layout)=
 #### Layout
 
-(bf2raw-layout)=
 
 Typical Zarr layout produced by running `bioformats2raw` on a fileset that contains more than one image (series > 1):
 
@@ -415,8 +415,8 @@ series.ome.zarr               # One converted fileset from bioformats2raw
     └── ...
 ```
 
-#### bf2raw-attributes
 (bf2raw-attributes-md)=
+#### bf2raw-attributes
 
 The OME-Zarr Metadata in the top-level `zarr.json` file must contain the `bioformats2raw.layout` key:
 
@@ -438,8 +438,8 @@ The OME-Zarr Metadata in the `zarr.json` file within the OME group may contain t
 :language: json
 ```
 
-#### Details
 (bf2raw-details)=
+#### Details
 
 Conforming groups:
 
@@ -467,8 +467,8 @@ Conforming readers:
 - MAY choose to show all images within the collection or offer the user a choice of images, as with <dfn export="true"><abbr title="High-content screening">HCS</abbr></dfn> plates;
 - MAY ignore other groups or arrays under the root of the hierarchy.
 
-### "coordinateTransformations" metadata
 (coord-trafo-md)=
+### "coordinateTransformations" metadata
 
 `coordinateTransformations` describe the mapping between two coordinate systems (defined by [`coordinateSystems`](#coordinate-systems-md)).
 For example, to map an array's discrete coordinate system to its corresponding physical coordinates.
@@ -479,7 +479,7 @@ This means they represent functions from *points* in the input space to *points*
 A transform is a JSON object with the following fields:
 
 :::{table} Object: CoordinateTransformation
-:label: object:coordinatetransformation
+:name: object:coordinatetransformation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -514,7 +514,7 @@ The parameter values (e.g., `scale` for a [scale transformation](#scale-md)) MUS
 The `input` and `output` fields are objects structured as follows:
 
 :::{table} Object: CoordinateSystemReference
-:label: object:coordinatesystemreference
+:name: object:coordinatesystemreference
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -534,8 +534,8 @@ Conforming readers:
 - SHOULD be able to apply transformations to points;
 - SHOULD be able to apply transformations to images;
 
-**Constraints**
 (coord-trafo-constraints)=
+**Constraints**
 
 Coordinate transformations can be stored in multiple places to reflect different use cases.
 Depending on which, different constraints apply to the transformations, as described below:
@@ -752,8 +752,8 @@ defines the mapping from the "[intrinsic](#spec:hint:multiscales-intrinsic-coord
 Another transformation (e.g. in a `scene`) could then use the "array" coordinate system as an input or output to define transformations in array units.
 :::
 
-#### Matrix transformations
 (matrix-trafo-md)=
+#### Matrix transformations
 
 Two transformation types ([affine](#affine-md) and [rotation](#rotation-md)) are parametrized by matrices.
 Matrices are applied to column vectors that represent points in the input coordinate system.
@@ -763,8 +763,8 @@ When stored as a 2D Zarr array, the first dimension indexes rows and the second 
 (e.g., an array of `"shape":[3,4]` has 3 rows and 4 columns).
 When stored as a 2D json array, the inner array contains rows (e.g. `[[1,2,3], [4,5,6]]` has 2 rows and 3 columns).
 
-#### Transformation types
 (trafo-types-md)=
+#### Transformation types
 
 Input and output dimensionality may be determined by the coordinate system referred to by the `input` and `output` fields, respectively.
 If the value of `input` is a path to an array, its shape gives the input dimension,
@@ -772,11 +772,11 @@ otherwise it is given by the length of `axes` for the coordinate system with the
 If the value of `output` is an array, its shape gives the output dimension,
 otherwise it is given by the length of `axes` for the coordinate system with the name of the `output`.
 
-##### identity
 (identity-md)=
+##### identity
 
 :::{table} CoordinateTransformation variant: Identity
-:label: object:coordinatetransformation:identity
+:name: object:coordinatetransformation:identity
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -804,11 +804,11 @@ y = j
 
 :::
 
-##### mapAxis
 (mapAxis-md)=
+##### mapAxis
 
 :::{table} CoordinateTransformation variant: MapAxis
-:label: object:coordinatetransformation:mapaxis
+:name: object:coordinatetransformation:mapaxis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -853,11 +853,11 @@ y = i
 
 :::
 
-##### projectAxis
 (projectAxis-md)=
+##### projectAxis
 
 :::{table} CoordinateTransformation variant: ProjectAxis
-:label: object:coordinatetransformation:projectaxis
+:name: object:coordinatetransformation:projectaxis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -923,11 +923,11 @@ This is useful for example when projecting a 3D CYX image to a 2D YX image by dr
 ```
 
 
-##### translation
 (translation-md)=
+##### translation
 
 :::{table} CoordinateTransformation variant: Translation
-:label: object:coordinatetransformation:translation
+:name: object:coordinatetransformation:translation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -960,11 +960,11 @@ y = j - 1.42
 ```
 :::
 
-##### scale
 (scale-md)=
+##### scale
 
 :::{table} CoordinateTransformation variant: Scale
-:label: object:coordinatetransformation:scale
+:name: object:coordinatetransformation:scale
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -984,8 +984,8 @@ in that case, `scale` transformations are invertible.
 : The scale parameters are stored as a JSON array of numbers.
 The array MUST have length `N`.
 
-:::{dropdown} Example 1
 (spec:example:coordinate_transformation_scale)=
+:::{dropdown} Example 1
 ```{literalinclude} examples/transformations/scale.json
 :language: json
 ```
@@ -1010,11 +1010,11 @@ these axes are typically not transformed, but must be represented in the scale p
 ```
 :::
 
-##### affine
 (affine-md)=
+##### affine
 
 :::{table} CoordinateTransformation variant: Affine
-:label: object:coordinatetransformation:affine
+:name: object:coordinatetransformation:affine
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1109,11 +1109,11 @@ these axes are typically not transformed, but must be represented in the transfo
 ```
 :::
 
-##### rotation
 (rotation-md)=
+##### rotation
 
 :::{table} CoordinateTransformation variant: Rotation
-:label: object:coordinatetransformation:rotation
+:name: object:coordinatetransformation:rotation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1155,11 +1155,11 @@ y = 1*i + 0*j
 ```
 :::
 
-##### sequence
 (sequence-md)=
+##### sequence
 
 :::{table} CoordinateTransformation variant: Sequence
-:label: object:coordinatetransformation:sequence
+:name: object:coordinatetransformation:sequence
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1212,8 +1212,8 @@ y = (j + 0.9) * 3
 and is invertible.
 :::
 
-##### coordinates and displacements
 (coordinates-displacements-md)=
+##### coordinates and displacements
 
 `coordinates` and `displacements` transformations store a vector field of arbitrary sampling density in an ome-zarr [multiscale group](#multiscales-md),
 defining a mapping from an input coordinate system to an output coordinate system.
@@ -1226,7 +1226,7 @@ but implementations MAY approximate their inverses.
 ```
 
 :::{table} CoordinateTransformation variant: Coordinates
-:label: object:coordinatetransformation:coordinates
+:name: object:coordinatetransformation:coordinates
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1237,7 +1237,7 @@ but implementations MAY approximate their inverses.
 :::
 
 :::{table} CoordinateTransformation variant: Displacements
-:label: object:coordinatetransformation:displacements
+:name: object:coordinatetransformation:displacements
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1361,11 +1361,11 @@ Otherwise, the vector field is interpolated to obtain a displacement value for t
 
 :::
 
-##### byDimension
 (byDimension-md)=
+##### byDimension
 
 :::{table} CoordinateTransformation variant: ByDimension
-:label: object:coordinatetransformation:bydimension
+:name: object:coordinatetransformation:bydimension
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1375,13 +1375,13 @@ Otherwise, the vector field is interpolated to obtain a displacement value for t
 :::
 
 :::{table} Object: SubTransformation
-:label: object:subtransformation
+:name: object:subtransformation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `inputAxes` | MUST | array of unsigned integer | Which axes of the input coordinate this subtransformation applies to. |
 | `outputAxes` | MUST | array of unsigned integer | Which axes of the output coordinate this subtransformation produces. |
-| `transformation` | MUST | [CoordinateTransformation](#object:coordinate:transformation) object | Transformation to apply; SHOULD omit `input`/`output`. |
+| `transformation` | MUST | [CoordinateTransformation](#object:coordinatetransformation) object | Transformation to apply; SHOULD omit `input`/`output`. |
 
 :::
 
@@ -1442,11 +1442,11 @@ Another **invalid** `byDimension` transform:
 This transformation is invalid because the output axis `[1]` appears in more than one transformation in the `transformations` array.
 :::
 
-##### bijection
 (bijection-md)=
+##### bijection
 
 :::{table} CoordinateTransformation variant: Bijection
-:label: object:coordinatetransformation:bijection
+:name: object:coordinatetransformation:bijection
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1491,8 +1491,8 @@ the input and output of the `forward` and `inverse` transformations are understo
 ```
 :::
 
-### "multiscales" metadata
 (multiscales-md)=
+### "multiscales" metadata
 
 Metadata about an image can be found under the `multiscales` key in the group-level OME-Zarr Metadata.
 Here, "image" refers to data stored in a Zarr Array representing image,
@@ -1503,7 +1503,7 @@ resolutions.
 Each object provides the following fields:
 
 :::{table} Object: Multiscale
-:label: object:multiscale
+:name: object:multiscale
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1517,7 +1517,7 @@ Each object provides the following fields:
 :::
 
 :::{table} Object: Dataset
-:label: object:dataset
+:name: object:dataset
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1552,7 +1552,8 @@ Each object provides the following fields:
 
 
 ```{hint}
-(spec:hint:multiscales-intrinsic-coordinate-system)=
+:name: spec:hint:multiscales-intrinsic-coordinate-system
+
 [Multiscale images](#multiscales-md) have an "intrinsic" coordinate system.
 It will be a representation of the image in its **native physical coordinate system** and
 can be used for viewing and processing unless a use case dictates otherwise.
@@ -1672,8 +1673,8 @@ if not datasets:
     datasets = [x["path"] for x in multiscales[0]["datasets"]]
 ```
 
-### "omero" metadata (transitional)
 (omero-md)=
+### "omero" metadata (transitional)
 
 Information specific to the channels of an image and how to render it
 can be found under the `omero` key in the group-level metadata (i.e., under `"ome" > "omero"`):
@@ -1721,8 +1722,8 @@ Each object in `channels` is optional and MAY contain the following fields:
   - `end` (float) End of the rendering window.
 - `inverted` (boolean) If true, the rendering of darkest to brightest pixels should be inverted.
 
-### "labels" metadata
 (labels-md)=
+### "labels" metadata
 
 In OME-Zarr, Zarr arrays representing pixel-annotation data are stored in a group called `labels`.
 Some applications--notably image segmentation--produce a new image that is in the same coordinate system as a corresponding multiscale image
@@ -1756,7 +1757,7 @@ The `zarr.json` file for the label image MUST implement the multiscales specific
 Within the `multiscales` object, the JSON array associated with the `datasets` key MUST have the same number of entries (scale levels) as the original unlabeled image.
 
 :::{table} Object: ImageLabel
-:label: object:imagelabel
+:name: object:imagelabel
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1774,7 +1775,7 @@ That `image-label` object SHOULD contain a `colors` key,
 whose value MUST be a JSON array describing color information for the unique label values.
 
 :::{table} Object: LabelColor
-:label: object:labelcolor
+:name: object:labelcolor
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1796,7 +1797,7 @@ Additional keys under `colors` are allowed.
 Next, the `image-label` object MAY contain the following keys: a `properties` key, and a `source` key.
 
 :::{table} Object: LabelProperties
-:label: object:labelproperties
+:name: object:labelproperties
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1813,7 +1814,7 @@ denoting arbitrary metadata associated with that label.
 Label-value objects within the `properties` array do not need to have the same keys.
 
 :::{table} Object: Source
-:label: object:source
+:name: object:source
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1885,11 +1886,11 @@ Pixels with a 1 in the Zarr array, which correspond to cellular space, will be d
 :::
 
 
-### "plate" metadata
 (plate-md)=
+### "plate" metadata
 
 :::{table} Object: Plate
-:label: object:plate
+:name: object:plate
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1906,7 +1907,7 @@ For high-content screening datasets,
 the plate layout can be found under the custom attributes of the plate group under the `plate` key in the group-level metadata.
 
 :::{table} Object: Acquisition
-:label: object:acquisition
+:name: object:acquisition
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1934,7 +1935,7 @@ Each acquisition object MAY contain a `starttime` and/or `endtime` key
 whose values MUST be integer epoch timestamps specifying the start and/or end timestamp of the acquisition.
 
 :::{table} Object: Column
-:label: object:column
+:name: object:column
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1961,7 +1962,7 @@ The `plate` object SHOULD contain a `name` key
 whose value MUST be a string defining the name of the plate.
 
  :::{table} Object: Row
- :label: object:row
+ :name: object:row
 
  | key | requirement | type | description |
  | --- | ----------- | ---- | ----------- |
@@ -1982,7 +1983,7 @@ Care SHOULD be taken to avoid collisions on case-insensitive filesystems
 (e.g. avoid using both `Aa` and `aA`).
 
 :::{table} Object: PlateWell
-:label: object:platewell
+:name: object:platewell
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2024,14 +2025,14 @@ containing one field of view per acquisition.
 ```
 :::
 
-### "well" metadata
 (well-md)=
+### "well" metadata
 
 For high-content screening datasets,
 the metadata about all fields of views under a given well can be found under the `well` key in the attributes of the well group.
 
 :::{table} Object: Well
-:label: object:well
+:name: object:well
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2040,7 +2041,7 @@ the metadata about all fields of views under a given well can be found under the
 :::
 
 :::{table} Object: FieldOfView
-:label: object:fieldofview
+:name: object:fieldofview
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2079,14 +2080,14 @@ The first field is part of the first acquisition, and the second field is part o
 ```
 :::
 
-### "scene" metadata
 (scene-md)=
+### "scene" metadata
 
 For images that share a spatial relationship,
 the `scene` metadata layout can be used to describe the relationship between images.
 
 :::{table} Object: Scene
-:label: object:scene
+:name: object:scene
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2246,15 +2247,15 @@ viewers may want to expose a choice for the user to select a coordinate system f
 
 ```
 
-## Specification naming style
 (naming-style)=
+## Specification naming style
 
 Multi-word keys in this specification should use the `camelCase` style.
 NB: some parts of the specification don't obey this convention as they were added before this was adopted,
 but they should be updated in due course.
 
-## Implementations
 (implementations-md)=
+## Implementations
 
 See [Tools](https://ngff.openmicroscopy.org/tools/index.html).
 
