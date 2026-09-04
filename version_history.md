@@ -2,9 +2,8 @@
 author: ""
 ---
 
-# Version History
-
 (ngff-spec:history)=
+# Version History
 
 All notable changes to this project will be documented in this file.
 

@@ -96,19 +96,39 @@ MyST allows a number of ways to reference and cross-reference inside this text
 and across several of the pages in this repo.
 For an overview of supported referencing syntax,
 see the [MyST doc pages](https://mystmd.org/guide/cross-references).
-It is recommended to use the following syntax in this document for consistency:
+It is recommended to use the following syntax for references:
 
 ```markdown
-anchor: (your-reference-name)=
-reference: [This is a reference](#your-reference-name)
+[This is the visible text](#your-reference-name)
+```
+
+The syntax for defining anchors/ targets differs by context.
+Use `(your-reference)=` on the line before an element like a section header to set the target for that element.
+Use the `:name: your-reference` option inside a directive (like a `{hint}`, `{table}`, or `{note}`)
+to define a reference to the whole directive,
+which allows smarter hover previews.
+
+```markdown
+(version0.9:some-section)=
+## Some section
+
+:::{note}
+:name: some-note
+
+The content of a note.
+:::
+
+## Another section
+
+See the [note](#some-note) in the [previous section](#some-section).
 ```
 
 For cross-referencing in the spec document,
 make sure to prepend the reference anchor with `versionX` like so:
 
 ```markdown
-## Some header
 (version0.9:some-header)=
+## Some header
 ```
 
 Otherwise, the same anchors may not be possible to resolve
@@ -138,7 +158,7 @@ This is a citation {cite:t}`citation_key`.
 
 where `citation_key` is the key of the bibtex entry in the `references.bib` file.
 
-#### Json examples
+#### JSON examples
 
 We suggest using [dropdowns](https://mystmd.org/guide/dropdowns-cards-and-tabs) for example code and other highlighting.
 For examples, please use the following syntax to wrap your examples:
