@@ -17,9 +17,10 @@ dependencies = [
 test = ["pytest", "jsonschema"]
 lint = ["codespell", "prek"]
 dev = [
+  "parver>=1.0.1.post0",
   "rust-just",
   { include-group = "test" },
-  { include-group = "lint" }
+  { include-group = "lint" },
 ]
 
 [tool.codespell]

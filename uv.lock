@@ -729,7 +729,7 @@ wheels = [
 
 [[package]]
 name = "jupyter-book"
-version = "2.0.0b3"
+version = "2.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ipykernel" },
@@ -738,9 +738,9 @@ dependencies = [
     { name = "nodeenv" },
     { name = "platformdirs" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/49/d1/6e53124c8a98ea39192fff5a162aa239ff719a8aa10f0f0e5bf3bb466f5c/jupyter_book-2.0.0b3.tar.gz", hash = "sha256:f55e23cc33721b13142e42753a28fd145158b97bcef2a513f7fcd2cc403f72f6", size = 14475767, upload-time = "2025-08-20T11:06:17.981Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/a5/17b115c2d890352871eec31212702f402a67503adbce9f739b5a89f84ec3/jupyter_book-2.0.2.tar.gz", hash = "sha256:36e1428ad85a70e500513793edff3be83c4f036f80eb67bb909180914f50094b", size = 14439814, upload-time = "2025-11-03T17:49:57.327Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/1b/36d46d9da0fb50b9f584f3a0d93fad245e65d3fb46ba3d7e653b541c3eef/jupyter_book-2.0.0b3-py3-none-any.whl", hash = "sha256:ca01be03a4e5d54f7bfef1150837052ccb3ea3f8810a2687db59171f46ef30d0", size = 2606638, upload-time = "2025-08-20T11:06:14.953Z" },
+    { url = "https://files.pythonhosted.org/packages/46/0d/0a6fdf9587634452b9ced1de89280a3daeb1fee16878ca442dfe76c9b0a8/jupyter_book-2.0.2-py3-none-any.whl", hash = "sha256:7ccbb5f00dc55d172f148eae179d257e4cfe815ee297050553733d13018cae57", size = 2600900, upload-time = "2025-11-03T17:49:55.137Z" },
 ]
 
 [[package]]
@@ -1094,15 +1094,11 @@ dependencies = [
     { name = "tomli" },
 ]
 
-[package.optional-dependencies]
-testing = [
-    { name = "codespell" },
-    { name = "pytest" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "codespell" },
+    { name = "jsonschema" },
+    { name = "parver" },
     { name = "prek" },
     { name = "pytest" },
     { name = "rust-just" },
@@ -1112,25 +1108,25 @@ lint = [
     { name = "prek" },
 ]
 test = [
+    { name = "jsonschema" },
     { name = "pytest" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "codespell", marker = "extra == 'testing'" },
     { name = "json-schema-for-humans" },
     { name = "json-with-comments" },
     { name = "jsonschema-markdown" },
-    { name = "jupyter-book", specifier = "==2.0.0b3" },
+    { name = "jupyter-book", specifier = "==2.0.2" },
     { name = "mystmd", specifier = "==1.6.3" },
-    { name = "pytest", marker = "extra == 'testing'" },
     { name = "tomli" },
 ]
-provides-extras = ["testing"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "codespell" },
+    { name = "jsonschema" },
+    { name = "parver", specifier = ">=1.0.1.post0" },
     { name = "prek" },
     { name = "pytest" },
     { name = "rust-just" },
@@ -1139,7 +1135,10 @@ lint = [
     { name = "codespell" },
     { name = "prek" },
 ]
-test = [{ name = "pytest" }]
+test = [
+    { name = "jsonschema" },
+    { name = "pytest" },
+]
 
 [[package]]
 name = "nodeenv"
@@ -1184,6 +1183,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/30/4b/90c937815137d43ce71ba043cd3566221e9df6b9c805f24b5d138c9d40a7/parso-0.8.7.tar.gz", hash = "sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1", size = 401824, upload-time = "2026-05-01T23:13:02.138Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/99/5d/8268b644392ee874ee82a635cd0df1773de230bde356c38de28e298392cc/parso-0.8.7-py2.py3-none-any.whl", hash = "sha256:a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c", size = 107025, upload-time = "2026-05-01T23:12:58.867Z" },
+]
+
+[[package]]
+name = "parver"
+version = "1.0.1.post0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9a/63/fe1b2d9f19ce47e4a0da6d33ea19a20d7bd1632da432d8e32b20724c741a/parver-1.0.1.post0.tar.gz", hash = "sha256:1bfb9c3f13d5daccaa10eb605679b5dbd4bf2e15b4f5fa1bdf178c5c3f065a2c", size = 105980, upload-time = "2026-07-30T12:32:19.754Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8b/ad/92776e7199caee67944945fb2c3988443060d318782d8c25d9bb9f8d235d/parver-1.0.1.post0-py3-none-any.whl", hash = "sha256:81f5cbe349da9939749ece40b70ef97b94a346f750750ed49f3ebbf1a40f1195", size = 20853, upload-time = "2026-07-30T12:32:18.289Z" },
 ]
 
 [[package]]
