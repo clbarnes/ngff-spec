@@ -4,6 +4,7 @@
 #   "parver",
 # ]
 # ///
+from collections.abc import Iterable, Sequence
 import difflib
 import json
 import logging
@@ -12,6 +13,7 @@ import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TypeVar
 
 from parver import Version
 
@@ -306,6 +308,7 @@ class VersionUpdater:
             yield self._format_diff(p)
 
 
+
 def main(raw_args=None):
     args = Args.parse(raw_args)
     logging.basicConfig(level=args.log_level)
@@ -323,5 +326,85 @@ def main(raw_args=None):
         print(sep.join(updater.format_diffs()))
 
 
+@dataclass(frozen=True)
+class Context:
+    lines: int = 3
+    characters: int = 80
+
+
+DEFAULT_CONTEXT = Context()
+
+
+@dataclass
+class Pos:
+    offset: int
+    line: int
+    col: int
+
+
+def iter_occurrences(haystack: str, needle: str) -> Iterable[int]:
+    offset = 0
+    while True:
+        local_offset = haystack.find(needle, offset)
+        if local_offset < 0:
+            return
+        start = offset + local_offset
+        yield start
+        offset = start + len(needle)
+
+
+T = TypeVar("T")
+
+
+def scan(seq: Sequence[T], start=0, step=1) -> Iterable[T]:
+    end = len(seq)
+    idx = start
+    while start < 0:
+        idx += end
+
+    while True:
+        yield seq[idx]
+        idx += step
+        if step >= end or step < 0:
+            return
+
+
+class InteractiveReplacer:
+    def __init__(self, text: str, old: str, new: str, context: int = 80) -> None:
+        self.text = text
+        self.old = old
+        self.new = new
+        self.context = context
+
+    def iter_occurrences(self) -> Iterable[int]:
+        offset = 0
+        while True:
+            local_offset = self.text.find(self.old, offset)
+            if local_offset < 0:
+                return
+            start = offset + local_offset
+            yield start
+            offset = start + len(self.old)
+
+    def iter_diffs(self) -> Iterable[str]:
+        for offset in self.iter_occurrences():
+            pre = self.text[max(offset - self.context, 0) : offset]
+            end = offset + len(self.old)
+            post = self.text[end : min(end, len(self.text))]
+
+            before = f"{pre}{self.old}{post}"
+            after = f"{pre}{self.new}{post}"
+
+            yield just_diff(before, after)
+
+
+def just_diff(before: str, after: str) -> str:
+    lines = difflib.unified_diff(before.splitlines(), after.splitlines())
+    return "\n".join(ln for ln in lines if not ln.endswith("\n"))
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    # sys.exit(main())
+    a = list("abcdefghijk")
+    b = list("AbcdefghijK")
+    print("\nLINEBREAK\n".join(difflib.context_diff(a, b, lineterm="")))
