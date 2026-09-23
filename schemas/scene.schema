@@ -14,7 +14,7 @@
         "scene":{
           "properties": {
             "coordinateSystems": {
-                "$ref": "coordinate_systems.schema",
+                "$ref": "https://ngff.openmicroscopy.org/0.9.dev2/schemas/coordinate_systems.schema",
                 "description": "Coordinate systems to combine with transforms to define spatial relationships"
             },
             "coordinateTransformations": {
@@ -24,7 +24,7 @@
               "items": {
                 "allOf": [
                   {
-                    "$ref": "coordinate_transformations.schema#/$defs/coordinateTransformation",
+                    "$ref": "https://ngff.openmicroscopy.org/0.9.dev2/schemas/coordinate_transformations.schema#/$defs/coordinateTransformation",
                     "description": "Parameters of any possible transform"
                   },
                   {
