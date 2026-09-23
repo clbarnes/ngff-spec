@@ -17,6 +17,7 @@ import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess as sp
 
 from parver import Version
 
@@ -311,6 +312,20 @@ class VersionUpdater:
             yield self._format_diff(p)
 
 
+def git_status():
+    result = sp.run(
+        ["git", "status", "--porcelain"], check=True, text=True, capture_output=True
+    )
+    s = result.stdout.strip()
+    out = []
+    if s:
+        for line in s.splitlines():
+            status = line[:2].strip()
+            path = Path(line[3:])
+            out.append((status, path))
+    return out
+
+
 def main(raw_args=None):
     args = Args.parse(raw_args)
     logging.basicConfig(level=args.log_level)
@@ -324,6 +339,14 @@ def main(raw_args=None):
         return 0
 
     if args.execute:
+        changes = git_status()
+        if changes:
+            print(
+                f"You have {len(changes)} changed files in git. "
+                "Commit or stash them before retrying with --execute.",
+                file=sys.stderr,
+            )
+            return 1
         updater.apply_updates()
     else:
         sep = "\n\n" + ("-" * 80) + "\n\n"
@@ -333,6 +356,7 @@ def main(raw_args=None):
         "N.B. version strings in free text like index.md must be updated manually",
         file=sys.stdout,
     )
+    return 0
 
 
 if __name__ == "__main__":
