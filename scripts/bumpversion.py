@@ -17,6 +17,7 @@ import runpy
 import subprocess as sp
 import sys
 from argparse import ArgumentParser
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -333,6 +334,29 @@ def eprint(*args, **kwargs):
     print(*args, **kwargs)
 
 
+def list_tracked_files() -> list[Path]:
+    res = sp.run(
+        ["git", "ls-tree", "-r", "HEAD", "--name-only"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return [PROJECT_DIR / p for p in res.stdout.strip().splitlines(False)]
+
+
+def find_remaining_old(old: str) -> list[Path]:
+    ignore = {PROJECT_DIR / "uv.lock", PROJECT_DIR / "version_history.md"}
+    return [
+        p
+        for p in sorted(list_tracked_files())
+        if p not in ignore and old in p.read_text()
+    ]
+
+
+def format_list(items: Iterable, sep="\n", indent="\t"):
+    return sep.join(f"{indent}{item}" for item in items)
+
+
 def main(raw_args=None):
     args = Args.parse(raw_args)
     logging.basicConfig(level=args.log_level)
@@ -345,8 +369,6 @@ def main(raw_args=None):
         logger.warning("No updates to make")
         return 0
 
-    changed_str = "\n\t".join(str(c) for c in updater.list_updated_files())
-
     if args.execute:
         changes = git_status()
         if changes:
@@ -357,11 +379,21 @@ def main(raw_args=None):
             )
             return 1
         updater.apply_updates()
-        eprint(f"Changed {n_updates} files:\n\t{changed_str}")
+        eprint(f"Changed {n_updates} files.")
     else:
         sep = "\n\n" + ("-" * 80) + "\n\n"
         print(sep.join(updater.format_diffs()))
-        eprint(f"Would change {n_updates} files:\n\t{changed_str}")
+        eprint(f"Would change {n_updates} files. Use --execute to make changes.")
+
+    remaining_old = find_remaining_old(old_version)
+
+    if not args.execute:
+        remaining_old = [x for x in remaining_old if x not in updater.mapping]
+
+    if remaining_old:
+        eprint(
+            f"{len(remaining_old)} files may still have references to the old version:\n{format_list(remaining_old)}"
+        )
 
     eprint(
         "N.B. version strings in free text like index.md must be updated manually",
