@@ -35,7 +35,7 @@
           "description": "Unit for the axis"
         },
         "orientation": {
-          "$ref": "axis_orientation.schema"
+          "$ref": "https://ngff.openmicroscopy.org/0.9.dev2/schemas/axis_orientation.schema"
         }
       },
       "required": [
