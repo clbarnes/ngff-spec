@@ -13,11 +13,11 @@ import difflib
 import json
 import logging
 import runpy
+import subprocess as sp
 import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from pathlib import Path
-import subprocess as sp
 
 from parver import Version
 
