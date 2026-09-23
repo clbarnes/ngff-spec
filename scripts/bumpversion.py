@@ -106,6 +106,9 @@ class Update:
     new: str
 
 
+YAML_TEMPLATE = 'ngffversion: "{version}"'
+
+
 class VersionUpdater:
     def __init__(self, old_version: str, new_version: str) -> None:
         self.old = old_version
@@ -271,6 +274,19 @@ class VersionUpdater:
         )
         if updated != orig:
             self.mapping[path] = Update(orig, updated)
+            return True
+        return False
+
+    def _update_substitutions(self) -> bool:
+        """Update the substitutions object in myst.yml"""
+        myst_path = PROJECT_DIR / "myst.yml"
+        orig = myst_path.read_text()
+        updated = orig.replace(
+            YAML_TEMPLATE.format(version=self.old),
+            YAML_TEMPLATE.format(version=self.new),
+        )
+        if updated != orig:
+            self.mapping[myst_path] = Update(orig, updated)
             return True
         return False
 
