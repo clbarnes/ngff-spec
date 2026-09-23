@@ -106,9 +106,6 @@ class Update:
     new: str
 
 
-YAML_TEMPLATE = 'ngffversion: "{version}"'
-
-
 class VersionUpdater:
     def __init__(self, old_version: str, new_version: str) -> None:
         self.old = old_version
@@ -277,19 +274,6 @@ class VersionUpdater:
             return True
         return False
 
-    def _update_substitutions(self) -> bool:
-        """Update the substitutions object in myst.yml"""
-        myst_path = PROJECT_DIR / "myst.yml"
-        orig = myst_path.read_text()
-        updated = orig.replace(
-            YAML_TEMPLATE.format(version=self.old),
-            YAML_TEMPLATE.format(version=self.new),
-        )
-        if updated != orig:
-            self.mapping[myst_path] = Update(orig, updated)
-            return True
-        return False
-
     def plan_updates(self) -> int:
         count = 0
         count += self._update_examples()
@@ -298,7 +282,6 @@ class VersionUpdater:
         count += self._update_zarr_tests()
         count += self._update_version_py()
         count += self._update_changelog()
-        count += self._update_substitutions()
         return count
 
     def list_updated_files(self) -> list[Path]:
@@ -345,6 +328,11 @@ def main(raw_args=None):
     else:
         sep = "\n\n" + ("-" * 80) + "\n\n"
         print(sep.join(updater.format_diffs()))
+
+    print(
+        "N.B. version strings in free text like index.md must be updated manually",
+        file=sys.stdout,
+    )
 
 
 if __name__ == "__main__":

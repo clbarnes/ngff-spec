@@ -5,10 +5,6 @@ project:
   github: ome/ngff-spec
   bibliography:
     - references.bib
-  plugins:
-    - https://github.com/myst-contrib/myst-substitutions/releases/download/v0.2/index.mjs
-  substitutions:
-    ngffversion: "0.9.dev2"
   exports:
     - format: pdf
       template: plain_latex_book
