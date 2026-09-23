@@ -298,6 +298,7 @@ class VersionUpdater:
         count += self._update_zarr_tests()
         count += self._update_version_py()
         count += self._update_changelog()
+        count += self._update_substitutions()
         return count
 
     def list_updated_files(self) -> list[Path]:
@@ -344,8 +345,6 @@ def main(raw_args=None):
     else:
         sep = "\n\n" + ("-" * 80) + "\n\n"
         print(sep.join(updater.format_diffs()))
-
-    print("N.B. free text files like index.md must be updated manually", sys.stdout)
 
 
 if __name__ == "__main__":
