@@ -394,6 +394,9 @@ def main(raw_args=None):
         eprint(
             f"{len(remaining_old)} files may still have references to the old version:\n{format_list(remaining_old)}"
         )
+        eprint(
+            f"Find line references with\n\tgrep --color -n -F '{old_version}' $(git ls-tree -r HEAD --name-only)"
+        )
 
     eprint(
         "N.B. version strings in free text like index.md must be updated manually",
