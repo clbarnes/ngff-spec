@@ -102,18 +102,14 @@ It is recommended to use the following syntax for references:
 [This is the visible text](#your-reference-name)
 ```
 
-The syntax for defining anchors/ targets differs by context.
 Use `(your-reference)=` on the line before an element like a section header to set the target for that element.
-Use the `:name: your-reference` option inside a directive (like a `{hint}`, `{table}`, or `{note}`)
-to define a reference to the whole directive,
-which allows smarter hover previews.
 
 ```markdown
 (version0.9:some-section)=
 ## Some section
 
+(version0.9:some-note)=
 :::{note}
-:name: some-note
 
 The content of a note.
 :::

@@ -198,13 +198,13 @@ object that MUST contain a `version` key, the value of which MUST be a string sp
 (coordinate-systems-md)=
 ### "coordinateSystems" metadata
 
+(object-coordinatesystem)=
 :::{table} Object: CoordinateSystem
-:name: object:coordinatesystem
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `name` | MUST | string, non-empty | Used to identify the coordinate system. |
-| `axes` | MUST | array of [Axis](#object:axis) | Information about each array dimension. |
+| `axes` | MUST | array of [Axis](#object-axis) | Information about each array dimension. |
 
 :::
 
@@ -248,8 +248,8 @@ See the [example below](#spec:example:coordinate_transformation_scale).
 (axes-md)=
 #### "axes" metadata
 
+(object-axis)=
 :::{table} Object: Axis
-:name: object:axis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -258,7 +258,7 @@ See the [example below](#spec:example:coordinate_transformation_scale).
 | `discrete` | MAY | boolean, default `false` | Whether this axis should not be interpolated. |
 | `unit` | SHOULD | string | See below for unit types. |
 | `longName` | MAY | string | Description of an axis and its properties. |
-| `orientation` | MAY | [Orientation](#object:orientation:anatomical) object | Used when an axis aligns with a canonical orientation of the sample. |
+| `orientation` | MAY | [Orientation](#object-orientation-anatomical) object | Used when an axis aligns with a canonical orientation of the sample. |
 
 :::
 
@@ -292,16 +292,16 @@ where each object describes a dimension (axis) and:
 The values in the `name` fields MUST be unique within the same coordinate system.
 The length of "axes" MUST be equal to the number of dimensions of the arrays that contain the image data.
 
+(spec:orientation-values)=
 ```{note}
-:name: spec:orientation-values
 
+(object-orientation-anatomical)=
 :::{table} Orientation variant: Anatomical
-:name: object:orientation:anatomical
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `type` | MUST | `"anatomical"` | Discriminator for the Anatomical variant. |
-| `orientation` | MUST | [Anatomical Orientation](#enum:anatomicalorientation) enum | Known orientation type. |
+| `orientation` | MUST | [Anatomical Orientation](#enum-anatomicalorientation) enum | Known orientation type. |
 
 :::
 
@@ -310,8 +310,8 @@ indicated with the "orientation" field, which must have "type"
 "anatomical" (with further types to be added to the specification or as
 extensions in the future), and one of the values detailed below:
 
+(enum-anatomicalorientation)=
 :::{table} Enum: AnatomicalOrientation
-:name: enum:anatomicalorientation
 
 | value | description |
 | ----- | ----------- |
@@ -478,14 +478,14 @@ This means they represent functions from *points* in the input space to *points*
 
 A transform is a JSON object with the following fields:
 
+(object-coordinatetransformation)=
 :::{table} Object: CoordinateTransformation
-:name: object:coordinatetransformation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `name` | MAY | string | A unique name for this transformation. |
-| `input` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object:coordinatesystemreference) object | The input coordinate system for this transformation. |
-| `output` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object:coordinatesystemreference) object | The output coordinate system for this transformation. |
+| `input` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object-coordinatesystemreference) object | The input coordinate system for this transformation. |
+| `output` | MUST unless part of a wrapper transform | [CoordinateSystemReference](#object-coordinatesystemreference) object | The output coordinate system for this transformation. |
 | `type` | MUST | string | Discriminator for CoordinateTransformation variants. |
 | ... | MAY | any | Additional fields are strictly determined by the `type` discriminator. |
 
@@ -513,8 +513,8 @@ The parameter values (e.g., `scale` for a [scale transformation](#scale-md)) MUS
 
 The `input` and `output` fields are objects structured as follows:
 
+(object-coordinatesystemreference)=
 :::{table} Object: CoordinateSystemReference
-:name: object:coordinatesystemreference
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -775,8 +775,8 @@ otherwise it is given by the length of `axes` for the coordinate system with the
 (identity-md)=
 ##### identity
 
+(object-coordinatetransformation-identity)=
 :::{table} CoordinateTransformation variant: Identity
-:name: object:coordinatetransformation:identity
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -807,8 +807,8 @@ y = j
 (mapAxis-md)=
 ##### mapAxis
 
+(object-coordinatetransformation-mapaxis)=
 :::{table} CoordinateTransformation variant: MapAxis
-:name: object:coordinatetransformation:mapaxis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -856,8 +856,8 @@ y = i
 (projectAxis-md)=
 ##### projectAxis
 
+(object-coordinatetransformation-projectaxis)=
 :::{table} CoordinateTransformation variant: ProjectAxis
-:name: object:coordinatetransformation:projectaxis
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -926,8 +926,8 @@ This is useful for example when projecting a 3D CYX image to a 2D YX image by dr
 (translation-md)=
 ##### translation
 
+(object-coordinatetransformation-translation)=
 :::{table} CoordinateTransformation variant: Translation
-:name: object:coordinatetransformation:translation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -963,8 +963,8 @@ y = j - 1.42
 (scale-md)=
 ##### scale
 
+(object-coordinatetransformation-scale)=
 :::{table} CoordinateTransformation variant: Scale
-:name: object:coordinatetransformation:scale
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1013,8 +1013,8 @@ these axes are typically not transformed, but must be represented in the scale p
 (affine-md)=
 ##### affine
 
+(object-coordinatetransformation-affine)=
 :::{table} CoordinateTransformation variant: Affine
-:name: object:coordinatetransformation:affine
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1112,8 +1112,8 @@ these axes are typically not transformed, but must be represented in the transfo
 (rotation-md)=
 ##### rotation
 
+(object-coordinatetransformation-rotation)=
 :::{table} CoordinateTransformation variant: Rotation
-:name: object:coordinatetransformation:rotation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1158,13 +1158,13 @@ y = 1*i + 0*j
 (sequence-md)=
 ##### sequence
 
+(object-coordinatetransformation-sequence)=
 :::{table} CoordinateTransformation variant: Sequence
-:name: object:coordinatetransformation:sequence
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `type` | MUST | `"sequence"` | Discriminator for the Sequence variant. |
-| `transformations` | MUST | array of [CoordinateTransformation](#object:coordinatetransformation) | Transformations to apply in sequence; SHOULD omit `input`/`output` |
+| `transformations` | MUST | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations to apply in sequence; SHOULD omit `input`/`output` |
 
 :::
 
@@ -1225,8 +1225,8 @@ The `coordinates` and `displacements` transformations are not invertible in gene
 but implementations MAY approximate their inverses.
 ```
 
+(object-coordinatetransformation-coordinates)=
 :::{table} CoordinateTransformation variant: Coordinates
-:name: object:coordinatetransformation:coordinates
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1236,8 +1236,8 @@ but implementations MAY approximate their inverses.
 
 :::
 
+(object-coordinatetransformation-displacements)=
 :::{table} CoordinateTransformation variant: Displacements
-:name: object:coordinatetransformation:displacements
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1364,24 +1364,24 @@ Otherwise, the vector field is interpolated to obtain a displacement value for t
 (byDimension-md)=
 ##### byDimension
 
+(object-coordinatetransformation-bydimension)=
 :::{table} CoordinateTransformation variant: ByDimension
-:name: object:coordinatetransformation:bydimension
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `type` | MUST | `"byDimension"` | Discriminator for the ByDimension variant. |
-| `transformations` | MUST | array of [SubTransformation](#object:subtransformation) | Transformations to apply to subsets of coordinate axes. |
+| `transformations` | MUST | array of [SubTransformation](#object-subtransformation) | Transformations to apply to subsets of coordinate axes. |
 
 :::
 
+(object-subtransformation)=
 :::{table} Object: SubTransformation
-:name: object:subtransformation
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `inputAxes` | MUST | array of unsigned integer | Which axes of the input coordinate this subtransformation applies to. |
 | `outputAxes` | MUST | array of unsigned integer | Which axes of the output coordinate this subtransformation produces. |
-| `transformation` | MUST | [CoordinateTransformation](#object:coordinatetransformation) object | Transformation to apply; SHOULD omit `input`/`output`. |
+| `transformation` | MUST | [CoordinateTransformation](#object-coordinatetransformation) object | Transformation to apply; SHOULD omit `input`/`output`. |
 
 :::
 
@@ -1445,14 +1445,14 @@ This transformation is invalid because the output axis `[1]` appears in more tha
 (bijection-md)=
 ##### bijection
 
+(object-coordinatetransformation-bijection)=
 :::{table} CoordinateTransformation variant: Bijection
-:name: object:coordinatetransformation:bijection
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `type` | MUST | `"bijection"` | Discriminator for the Bijection variant. |
-| `forward` | MUST | [CoordinateTransformation](#object:coordinatetransformation) object | Transformation to apply in the forward direction; SHOULD omit `input`/`output`. |
-| `inverse` | MUST | [CoordinateTransformation](#object:coordinatetransformation) object | Transformation to apply in the inverse direction; SHOULD omit `input`/`output`. |
+| `forward` | MUST | [CoordinateTransformation](#object-coordinatetransformation) object | Transformation to apply in the forward direction; SHOULD omit `input`/`output`. |
+| `inverse` | MUST | [CoordinateTransformation](#object-coordinatetransformation) object | Transformation to apply in the inverse direction; SHOULD omit `input`/`output`. |
 
 :::
 
@@ -1502,27 +1502,27 @@ resolutions.
 `multiscales` contains an array of objects where each entry describes a multiscale image.
 Each object provides the following fields:
 
+(object-multiscale)=
 :::{table} Object: Multiscale
-:name: object:multiscale
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
-| `coordinateSystems` | MUST | array of [CoordinateSystem](#object:coordinatesystem) | Coordinate systems for this multiscale. |
-| `datasets` | MUST | array of [Dataset](#object:dataset) | Metadata about arrays storing individual resolution levels. |
-| `coordinateTransformations` | MAY | array of [CoordinateTransformation](#object:coordinatetransformation) | Transformations applied to all resolution levels. |
+| `coordinateSystems` | MUST | array of [CoordinateSystem](#object-coordinatesystem) | Coordinate systems for this multiscale. |
+| `datasets` | MUST | array of [Dataset](#object-dataset) | Metadata about arrays storing individual resolution levels. |
+| `coordinateTransformations` | MAY | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations applied to all resolution levels. |
 | `name` | MAY | string | Name of the multiscale image. |
 | `type` | MAY | string | Name of the downsampling method used to generate lower scales. |
 | `metadata` | MAY | object | Additional metadata about the downscaling method. |
 
 :::
 
+(object-dataset)=
 :::{table} Object: Dataset
-:name: object:dataset
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
 | `path` | MUST | string | Path to the Zarr array containing image data for this scale level. |
-| `coordinateTransformations` | MUST | [CoordinateTransformation](#object:coordinatetransformation) | Transformation from the image voxel indices to a known coordinate system. |
+| `coordinateTransformations` | MUST | [CoordinateTransformation](#object-coordinatetransformation) | Transformation from the image voxel indices to a known coordinate system. |
 
 :::
 
@@ -1551,8 +1551,8 @@ Each object provides the following fields:
    within the array.
 
 
+(spec:hint:multiscales-intrinsic-coordinate-system)=
 ```{hint}
-:name: spec:hint:multiscales-intrinsic-coordinate-system
 
 [Multiscale images](#multiscales-md) have an "intrinsic" coordinate system.
 It will be a representation of the image in its **native physical coordinate system** and
@@ -1756,14 +1756,14 @@ All label images SHOULD be listed within this metadata file.
 The `zarr.json` file for the label image MUST implement the multiscales specification.
 Within the `multiscales` object, the JSON array associated with the `datasets` key MUST have the same number of entries (scale levels) as the original unlabeled image.
 
+(object-imagelabel)=
 :::{table} Object: ImageLabel
-:name: object:imagelabel
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
-| `colors` | SHOULD | array of [LabelColor](#object:labelcolor) | Color information associated with each label value. |
-| `properties` | MAY | array of [LabelProperties](#object:labelproperties) | Arbitrary properties associated with each label value. |
-| `source` | MAY | [Source](#object:source) | Information about the "raw" image labelled by this label image. |
+| `colors` | SHOULD | array of [LabelColor](#object-labelcolor) | Color information associated with each label value. |
+| `properties` | MAY | array of [LabelProperties](#object-labelproperties) | Arbitrary properties associated with each label value. |
+| `source` | MAY | [Source](#object-source) | Information about the "raw" image labelled by this label image. |
 
 :::
 
@@ -1774,8 +1774,8 @@ and optionally, further arbitrary properties of the label image.
 That `image-label` object SHOULD contain a `colors` key,
 whose value MUST be a JSON array describing color information for the unique label values.
 
+(object-labelcolor)=
 :::{table} Object: LabelColor
-:name: object:labelcolor
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1796,8 +1796,8 @@ Additional keys under `colors` are allowed.
 
 Next, the `image-label` object MAY contain the following keys: a `properties` key, and a `source` key.
 
+(object-labelproperties)=
 :::{table} Object: LabelProperties
-:name: object:labelproperties
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1813,8 +1813,8 @@ Additionally, an arbitrary number of key-value pairs MAY be present for each lab
 denoting arbitrary metadata associated with that label.
 Label-value objects within the `properties` array do not need to have the same keys.
 
+(object-source)=
 :::{table} Object: Source
-:name: object:source
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1889,25 +1889,25 @@ Pixels with a 1 in the Zarr array, which correspond to cellular space, will be d
 (plate-md)=
 ### "plate" metadata
 
+(object-plate)=
 :::{table} Object: Plate
-:name: object:plate
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
-| `acquisitions` | MAY | array of [Acquisition](#object:acquisition) | Acquisitions for a given plate to which wells can refer. |
-| `columns` | MUST | array of [Column](#object:column) | Details about the plate columns. |
-| `rows` | MUST | array of [Row](#object:row) | Details about the plate rows. |
+| `acquisitions` | MAY | array of [Acquisition](#object-acquisition) | Acquisitions for a given plate to which wells can refer. |
+| `columns` | MUST | array of [Column](#object-column) | Details about the plate columns. |
+| `rows` | MUST | array of [Row](#object-row) | Details about the plate rows. |
 | `field_count` | SHOULD | unsigned integer | Maximum fields of view across all wells. |
 | `name` | SHOULD | string | Name of the plate. |
-| `wells` | MUST | array of [PlateWell](#object:platewell) | Details about the plate wells. |
+| `wells` | MUST | array of [PlateWell](#object-platewell) | Details about the plate wells. |
 
 :::
 
 For high-content screening datasets,
 the plate layout can be found under the custom attributes of the plate group under the `plate` key in the group-level metadata.
 
+(object-acquisition)=
 :::{table} Object: Acquisition
-:name: object:acquisition
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1934,8 +1934,8 @@ whose value MUST be a string specifying a description for the acquisition.
 Each acquisition object MAY contain a `starttime` and/or `endtime` key
 whose values MUST be integer epoch timestamps specifying the start and/or end timestamp of the acquisition.
 
+(object-column)=
 :::{table} Object: Column
-:name: object:column
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -1961,14 +1961,14 @@ whose value MUST be a positive integer defining the maximum number of fields per
 The `plate` object SHOULD contain a `name` key
 whose value MUST be a string defining the name of the plate.
 
- :::{table} Object: Row
- :name: object:row
+(object-row)=
+:::{table} Object: Row
 
- | key | requirement | type | description |
- | --- | ----------- | ---- | ----------- |
- | `name` | MUST | string | Row name. |
+| key | requirement | type | description |
+| --- | ----------- | ---- | ----------- |
+| `name` | MUST | string | Row name. |
 
- :::
+:::
 
 The `plate` object MUST contain a `rows` key
 whose value MUST be an array of JSON objects defining the rows of the plate.
@@ -1982,8 +1982,8 @@ and MUST NOT be a duplicate of any other `name` in the `rows` array.
 Care SHOULD be taken to avoid collisions on case-insensitive filesystems
 (e.g. avoid using both `Aa` and `aA`).
 
+(object-platewell)=
 :::{table} Object: PlateWell
-:name: object:platewell
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2031,17 +2031,17 @@ containing one field of view per acquisition.
 For high-content screening datasets,
 the metadata about all fields of views under a given well can be found under the `well` key in the attributes of the well group.
 
+(object-well)=
 :::{table} Object: Well
-:name: object:well
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
-| `images` | MUST | array of [FieldOfView](#object:fieldofview) | Fields of view of the well. |
+| `images` | MUST | array of [FieldOfView](#object-fieldofview) | Fields of view of the well. |
 
 :::
 
+(object-fieldofview)=
 :::{table} Object: FieldOfView
-:name: object:fieldofview
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
@@ -2086,13 +2086,13 @@ The first field is part of the first acquisition, and the second field is part o
 For images that share a spatial relationship,
 the `scene` metadata layout can be used to describe the relationship between images.
 
+(object-scene)=
 :::{table} Object: Scene
-:name: object:scene
 
 | key | requirement | type | description |
 | --- | ----------- | ---- | ----------- |
-| `coordinateTransformations` | MUST | array of [CoordinateTransformation](#object:coordinatetransformation) | Transformations between coordinate systems. |
-| `coordinateSystems` | MAY | array of [CoordinateSystem](#object:coordinatesystem) | Coordinate systems applicable to multiple images. |
+| `coordinateTransformations` | MUST | array of [CoordinateTransformation](#object-coordinatetransformation) | Transformations between coordinate systems. |
+| `coordinateSystems` | MAY | array of [CoordinateSystem](#object-coordinatesystem) | Coordinate systems applicable to multiple images. |
 
 :::
 
