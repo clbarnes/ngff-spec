@@ -10,6 +10,7 @@
 Text files must be updated manually.
 """
 import difflib
+import functools
 import json
 import logging
 import runpy
@@ -208,7 +209,7 @@ class VersionUpdater:
     def _update_version_py(self):
         fpath = PROJECT_DIR / "_version.py"
         orig = fpath.read_text()
-        self.mapping[fpath] = Update(orig, f"__version__ = {self.new}\n")
+        self.mapping[fpath] = Update(orig, f'__version__ = "{self.new}"\n')
         return True
 
     def _update_ome(self, ome: dict[str, JSO]) -> bool:
@@ -326,6 +327,12 @@ def git_status():
     return out
 
 
+@functools.wraps(print)
+def eprint(*args, **kwargs):
+    kwargs.setdefault("file", sys.stderr)
+    print(*args, **kwargs)
+
+
 def main(raw_args=None):
     args = Args.parse(raw_args)
     logging.basicConfig(level=args.log_level)
@@ -338,6 +345,8 @@ def main(raw_args=None):
         logger.warning("No updates to make")
         return 0
 
+    changed_str = "\n\t".join(str(c) for c in updater.list_updated_files())
+
     if args.execute:
         changes = git_status()
         if changes:
@@ -348,13 +357,14 @@ def main(raw_args=None):
             )
             return 1
         updater.apply_updates()
+        eprint(f"Changed {n_updates} files:\n\t{changed_str}")
     else:
         sep = "\n\n" + ("-" * 80) + "\n\n"
         print(sep.join(updater.format_diffs()))
+        eprint(f"Would change {n_updates} files:\n\t{changed_str}")
 
-    print(
+    eprint(
         "N.B. version strings in free text like index.md must be updated manually",
-        file=sys.stdout,
     )
     return 0
 
