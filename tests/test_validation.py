@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import runpy
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -11,6 +12,8 @@ from jsonschema.exceptions import ValidationError
 
 os.chdir(Path(__file__).parent.parent)
 
+version = runpy.run_path("_version.py")["__version__"]
+
 schema_store = {}
 for schema_filename in glob.glob("schemas/*"):
     if schema_filename.endswith(".schema"):
@@ -19,7 +22,7 @@ for schema_filename in glob.glob("schemas/*"):
             schema_store[schema["$id"]] = schema
 
 GENERIC_SCHEMA = schema_store[
-    "https://ngff.openmicroscopy.org/0.9.dev2/schemas/ome_zarr.schema"
+    f"https://ngff.openmicroscopy.org/{version}/schemas/ome_zarr.schema"
 ]
 
 
